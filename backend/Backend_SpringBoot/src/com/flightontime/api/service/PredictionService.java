@@ -24,7 +24,7 @@ public class PredictionService {
     public PredictionResponse getPrediction(FlightRequest request) {
 
         String endpoint = dsApiUrl;
-
+        System.out.println(endpoint);
         //configure header para que fastapi entienda el json
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
