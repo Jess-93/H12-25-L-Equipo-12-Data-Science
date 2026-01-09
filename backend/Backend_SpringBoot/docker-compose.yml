@@ -1,0 +1,16 @@
+services:
+  springboot-app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: airplane-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    networks:
+      - airplane-network
+
+networks:
+  airplane-network:
+    driver: bridge
