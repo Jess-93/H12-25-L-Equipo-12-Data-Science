@@ -11,13 +11,41 @@ import jakarta.validation.constraints.Positive;
 public class FlightRequest {
 
     @NotBlank(message = "El nombre de la aerolínea es obligatorio.") // Validación: no vacío
-    private String aerolinea;
+    private String airline;
 
     @NotBlank(message = "El código de origen (IATA) es necesario para la ruta.")
-    private String origen;
+    private String origin_airport;
 
     @NotBlank(message = "El código de destino (IATA) es necesario para la ruta.")
-    private String destino;
+    private String destination_airport;
+
+    // @NotBlank (message = "La fecha y hora de partida son obligatorias.") // Activar línea en caso de usar variable String.
+    // Usar tipo «String» en caso de dar error de formato con LocalDateTime.
+    //private String scheduled_departure; // Formato: "2025-11-10T14:30:00"
+
+    @NotNull(message = "La hora de partida es obligatoria.")
+    @Positive (message = "La hora programada de partida debe ser un valor numérico positivo.")
+    private Integer scheduled_departure; // Se usa Integer para coincidir con el JSON: 1800.
+
+    @NotNull (message = "La distancia de vuelo es un dato crítico para la predicción, por favor indíque la distancia.")
+    @Positive (message = "La distancia de vuelo debe ser un valor numérico positivo.")
+    private Integer distance;
+
+    @NotNull   (message = "El año es un dato obligatorio para la predicción.")
+    @Positive (message = "El año debe ser un valor numérico positivo.")
+    private Integer year;
+
+    @NotNull  (message = "El mes es un dato obligatorio para la predicción.")
+    @Positive (message = "El mes debe ser un valor numérico positivo.")
+    private Integer month;
+
+    @NotNull (message = "El día es un dato obligatorio para la predicción.")
+    @Positive (message = "El día debe ser un valor numérico positivo.")
+    private Integer day;
+
+
+
+    /* Código original comentado para referencia futura
 
     @NotNull(message = "La fecha y hora de partida no pueden estar vacías.")
     //@Future(message = "La fecha de partida debe ser una fecha futura.")
@@ -28,4 +56,6 @@ public class FlightRequest {
     @NotNull(message = "La distancia es un dato crítico para la predicción, por favor indíque la distancia.")
     @Positive(message = "La distancia de vuelo debe ser un valor numérico positivo.")
     private Integer distanciaKm; // Entero para km
+
+     */
 }
