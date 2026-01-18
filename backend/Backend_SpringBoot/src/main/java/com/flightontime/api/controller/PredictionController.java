@@ -2,51 +2,60 @@ package com.flightontime.api.controller;
 
 import com.flightontime.api.dto.PredictionResponse;
 import com.flightontime.api.dto.FlightRequest;
-import com.flightontime.api.entity.PredictionLog;
-import com.flightontime.api.repository.PredictionLogRepository;
 import com.flightontime.api.service.PredictionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
-import java.util.List;
 
-@CrossOrigin(origins = "*") // Esto evita errores de CORS cuando trabajes con el frontend
+@CrossOrigin(origins = "*") // Esto evitará errores de CORS cuando Claude trabaje en el Frontend
 @RestController
-@RequestMapping("/api/v1/flights")
+@RequestMapping("/api/v1/flights") // <-- Agregamos esto para orden profesional
 public class PredictionController {
 
-    private final PredictionService predictionService;
-    private final PredictionLogRepository predictionLogRepository;
+    /*
+    ===========================================================================
+    INICIO DE BLOQUE: INTEGRACIÓN CON FAST API (FUTURO)
+    ===========================================================================
+    */
 
-    // Constructor para inyección de dependencias
-    public PredictionController(PredictionService predictionService,
-                                PredictionLogRepository predictionLogRepository) {
+    // NUEVO: Declaramos el servicio para usarlo más abajo
+    private final PredictionService predictionService;
+
+    // NUEVO: Constructor para que Spring inyecte el Prediction Service
+    public PredictionController(PredictionService predictionService) {
         this.predictionService = predictionService;
-        this.predictionLogRepository = predictionLogRepository;
     }
 
-    /**
-     * Endpoint POST para predecir si un vuelo será puntual o retrasado.
-     * Delega la lógica al PredictionService.
-     */
+    /*
+    ===========================================================================
+    FIN DE BLOQUE
+    */
+
     @PostMapping("/predict")
     public PredictionResponse predecirVuelo(@Valid @RequestBody FlightRequest solicitud) {
-        // Delegamos la responsabilidad al Service (lógica mock o real con FastAPI)
-        return predictionService.getPrediction(solicitud);
-    }
 
-    /**
-     * NUEVO ENDPOINT: GET para obtener el historial completo de predicciones.
-     * Retorna todos los registros ordenados por fecha de predicción (más reciente primero).
-     */
-    @GetMapping("/predictions")
-    public ResponseEntity<List<PredictionLog>> getHistorialPredicciones() {
-        List<PredictionLog> historial = predictionLogRepository.findAll(
-                Sort.by(Sort.Direction.DESC, "fechaPrediccion")
-        );
-        return ResponseEntity.ok(historial);
+//         --- INICIO DE SIMULACIÓN (MOCK ACTUAL) ---
+//         MANTENIDO: Simulamos una respuesta mientras Data Science termina la IA
+//        PredictionResponse respuesta = new PredictionResponse();
+//        respuesta.setPrevision("On Time");
+//        respuesta.setProbabilidad(0.95);
+//
+//        return respuesta;
+//         --- FIN DE SIMULACIÓN ---
+
+        /*
+        ===========================================================================
+        INICIO DE LÓGICA REAL CON FAST API
+        ===========================================================================
+        */
+
+        // Delegamos la responsabilidad al Service (Lógica de negocio FAST API)
+         return predictionService.getPrediction(solicitud);
+
+        /*
+        ===========================================================================
+        */
+
+
     }
 }
