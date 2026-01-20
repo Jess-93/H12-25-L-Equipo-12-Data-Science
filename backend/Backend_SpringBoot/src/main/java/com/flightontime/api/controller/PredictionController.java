@@ -8,8 +8,12 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/api/v1/flights")
-@CrossOrigin(origins = "http://localhost:8081")
+@RequestMapping("/api/v1/flights") // Ruta base para todas las solicitudes de este controlador
+@CrossOrigin(
+        origins = "*",
+        allowedHeaders = "*",
+        methods = {RequestMethod.POST, RequestMethod.OPTIONS} // Permitir solo POST y OPTIONS
+)
 public class PredictionController {
 
     /*
