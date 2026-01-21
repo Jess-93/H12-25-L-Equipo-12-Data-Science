@@ -1,16 +1,24 @@
 services:
   springboot-app:
     build:
-      context: .
-      dockerfile: dockerfile
+      context: .  # Ajusta a la ruta real de tu carpeta
+      dockerfile: Dockerfile
     container_name: airplane-api
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=default
+      # Agregamos la URL de la IA para que el contenedor la conozca
+      - DS_API_URL=http://163.176.202.221:8001/predict
+    volumes:
+      # Esto evita que tu historial de vuelos desaparezca al apagar Docker
+      - airplane-db-data:/app/data
     networks:
       - airplane-network
 
 networks:
   airplane-network:
     driver: bridge
+
+volumes:
+  airplane-db-data: # Definimos el volumen persistente

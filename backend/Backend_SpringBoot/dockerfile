@@ -1,20 +1,27 @@
 # Etapa de compilación
-FROM maven:3.9-eclipse-temurin-17 AS builder
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-COPY .mvn .mvn
-COPY mvnw .
+# 1. Copiamos solo el pom.xml primero para aprovechar el cache de Docker
 COPY pom.xml .
+# 2. Usamos 'mvn' directamente en lugar de './mvnw'
+RUN mvn dependency:go-offline -B
+
+# 3. Copiamos el código fuente
 COPY src ./src
 
-RUN chmod +x mvnw
-RUN ./mvnw dependency:go-offline -B
-RUN ./mvnw clean compile -DskipTests
-RUN ./mvnw package -DskipTests
+# 4. Compilamos y empaquetamos (clean package incluye el compile)
+RUN mvn clean package -DskipTests
 
 # Etapa de ejecución
-FROM eclipse-temurin:17-jre-alpine
+# Usamos Java 21 para que coincida con la etapa de compilación
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
+
+# 5. Copiamos el archivo .jar generado en la etapa anterior
 COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8080
+
+# 6. Comando para iniciar la aplicación
 ENTRYPOINT ["java", "-jar", "app.jar"]
